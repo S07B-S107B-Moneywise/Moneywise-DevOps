@@ -119,6 +119,12 @@ Para publicar a imagem no Docker Hub pela pipeline:
 2. Configure `DOCKERHUB_IMAGE` no `.env` ou no ambiente do job, por exemplo usando o formato `<usuario-dockerhub>/<imagem>`.
 3. Recrie o Jenkins quando alterar a imagem base: `docker-compose up -d --build jenkins`.
 
+> [!NOTE]
+> **Docker Rootless:** em modo rootless o socket não fica em `/var/run/docker.sock`. Antes de subir os containers, ajuste o volume no `docker-compose.yml` com seu UID (`id -u`):
+> ```yaml
+> - /run/user/SEU_UID/docker.sock:/var/run/docker.sock
+> ```
+
 Para notificar por e-mail pela pipeline, configure no `.env` local as variaveis `NOTIFICATION_EMAIL` e `NOTIFICATION_FROM`, ou reutilize `MAIL_CONTACT_RECIPIENT` e `MAIL_DEFAULT_SENDER`. As credenciais SMTP devem ficar em `SMTP_USERNAME`/`SMTP_PASSWORD` ou `MAIL_USERNAME`/`MAIL_PASSWORD`. Se essas variaveis nao estiverem preenchidas, a pipeline continua funcional e salva o conteudo da notificacao como artefato.
 
 Os relatorios de testes e cobertura sao arquivados no Jenkins; quando os plugins estiverem instalados, o HTML Publisher mostra o relatorio HTML de cobertura e o plugin Coverage processa o `coverage.xml`.
